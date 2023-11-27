@@ -101,12 +101,30 @@ public class Main {
         System.out.println("s_from_builder = " + s_from_builder);
         System.out.println();
 
+        //Команды изменения регистра
+        System.out.println("Изменять регистры строк можно при помощи методов toLowerCase() и toUpperCase()");
+        String just_string = "JuSt StRiNg";
+        System.out.println("just_string = " + just_string);
+        System.out.println("just_string.toLowerCase() = " + just_string.toLowerCase());
+        System.out.println("just_string.toUpperCase() = " + just_string.toUpperCase());
+        System.out.println();
 
+        //Удаление пробелов
+        System.out.println("Метод trim() удаляет пробелы в начале и конце строки");
+        String space_string = "   Hello world!   ";
+        System.out.println("space_string = \"" + space_string + "\"");
+        System.out.println("space_string.trim() = \"" + space_string.trim() + "\"");
+        System.out.println();
 
+        //нахождение индекса первого вхождения подстроки
+        System.out.println("Метод str.indexOf(x) выдаёт индекс первого вхождения подстроки x в строку str");
+        String str = "Мама мыла раму";
+        System.out.println("str = " + str + ", str.indexOf(\"ам\") = " + str.indexOf("ам"));
+        System.out.println();
 
-
-
-
-
+        //замена одной подстроки на другую
+        System.out.println("Метод str.replace(x, y) позволяет заменить все вхождения подстроки x на подстроку y");
+        System.out.println("str.replace(\"ам\", \"ап\") = " + str.replace("ам", "ап"));
+        System.out.println();
     }
 }
