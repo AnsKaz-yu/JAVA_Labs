@@ -1,10 +1,10 @@
 public class Node {
     private int count;
-    private char letter;
+    private int letter;
     private Node leftChild;
     private Node rightChild;
 
-    public Node(char letter, int count){
+    public Node(int letter, int count){
         this.letter = letter;
         this.count = count;
     }
@@ -51,11 +51,11 @@ public class Node {
         this.rightChild = child;
     }
 
-    public void setLetter(char letter){
+    public void setLetter(int letter){
         this.letter = letter;
     }
 
-    public char getLetter() {
+    public int getLetter() {
         return letter;
     }
 }

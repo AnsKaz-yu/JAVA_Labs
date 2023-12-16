@@ -7,20 +7,22 @@ public class HuffmanTree {
     FileInputHelper inputHelper;
     FileOutputHelper outputHelper;
     private String mode;
-    private String filename;
+    private String inputname;
+    private String outputname;
     private String codingString; //закодированное сообщение
     private String decodingString; //декодированное сообщение
     private Node huffmanTree;//дерево Хаффмана
-    private Map<Character, Integer> freqMap;//частотная таблица
-    private Map<Character, String> encodingMap;//кодировочная таблица
-    private Map<String, Character> decodingMap;//кодировочная таблица наоборот
+    private Map<Integer, Integer> freqMap;//частотная таблица
+    private Map<Integer, String> encodingMap;//кодировочная таблица
+    private Map<String, Integer> decodingMap;//кодировочная таблица наоборот
     private PriorityQueue p_queue; //приоритетная очередь
 
-    public HuffmanTree(String _mode, String _filename) throws IOException {
+    public HuffmanTree(String _mode, String _inputname, String _outputname) throws IOException {
         mode = _mode;
-        filename = _filename;
-        inputHelper = new FileInputHelper();
-        outputHelper = new FileOutputHelper();
+        inputname = _inputname;
+        outputname = _outputname;
+        inputHelper = new FileInputHelper(_inputname);
+        outputHelper = new FileOutputHelper(_outputname);
         freqMap = new HashMap<>();
         encodingMap = new HashMap<>();
         p_queue = new PriorityQueue();
@@ -46,8 +48,8 @@ public class HuffmanTree {
 
     //coding functions
     private void start_code() throws IOException {
-        outputHelper.setFileName("output.ark");
-        inputHelper.setFilename(filename);
+        outputHelper.setFileName(outputname);
+        inputHelper.setFilename(inputname);
         decodingString = inputHelper.readText();
         FillInFreqMap();
         MakeStartNodes();
@@ -60,14 +62,14 @@ public class HuffmanTree {
 
     private void FillInFreqMap(){
         for (int i = 0; i < decodingString.length(); i++){
-            char _char = decodingString.charAt(i);
+            int _char = decodingString.charAt(i);
             int _count_char = freqMap.getOrDefault(_char, 0);
             freqMap.put(_char, _count_char + 1);
         }
     }
 
     private void MakeStartNodes() {
-        for (Map.Entry<Character, Integer> item : freqMap.entrySet()){
+        for (Map.Entry<Integer, Integer> item : freqMap.entrySet()){
             Node new_node = new Node(item.getKey(), item.getValue());
             p_queue.insert(new_node);
         }
@@ -89,7 +91,7 @@ public class HuffmanTree {
 
     private void GetEncodingMap(Node node, String code) {
         if (node.isLeaf()){
-            char _char = node.getLetter();
+            int _char = node.getLetter();
             encodingMap.put(_char, code);
             return;
         }
@@ -100,14 +102,15 @@ public class HuffmanTree {
     private void CodeString(){
         for (int i = 0; i < decodingString.length(); i++){
             char _char = decodingString.charAt(i);
-            codingString = codingString.concat(encodingMap.get(_char));
+            codingString = codingString.concat(encodingMap.get((int)_char));
         }
+        System.out.println(codingString);
     }
 
     //decoding functions
     private void start_decode() throws IOException {
-        outputHelper.setFileName("output.txt");
-        inputHelper.setFilename(filename);
+        outputHelper.setFileName(outputname);
+        inputHelper.setFilename(inputname);
         decodingMap = inputHelper.readDecodingTree();
         codingString = inputHelper.readCodingText();
         DecodeString();
@@ -117,15 +120,18 @@ public class HuffmanTree {
     }
 
     private void DecodeString() {
+        //System.out.println(codingString);
         StringBuilder code = new StringBuilder();
         for (int i = 0; i < codingString.length(); i++){
             code.append(codingString.charAt(i));
             if (decodingMap.containsKey(code.toString())){
-                Character _char = decodingMap.get(code.toString());
-                decodingString = decodingString.concat(_char.toString());
+                int _int = decodingMap.get(code.toString());
+                char _char = (char)_int;
+                decodingString = decodingString.concat(Character.toString(_char));
                 code = new StringBuilder();
             }
         }
+
     }
 
     //info functions
@@ -146,10 +152,12 @@ public class HuffmanTree {
     private void rebuildHuffmanTree() {
         huffmanTree = new Node();
         Node current;
-        for (Map.Entry<String, Character> item : decodingMap.entrySet()){
+        System.out.println("Symbols codes:");
+        for (Map.Entry<String, Integer> item : decodingMap.entrySet()){
+            System.out.println(item.getValue() + " " + item.getKey());
             current = huffmanTree;
             String code = item.getKey();
-            Character _char = item.getValue();
+            Integer _char = item.getValue();
             for (int i = 0; i < code.length(); i++){
                 char c = code.charAt(i);
                 Node _new;

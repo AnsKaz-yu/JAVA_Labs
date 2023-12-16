@@ -4,38 +4,39 @@ import java.util.*;
 public class FileInputHelper implements Closeable{
     private File file;
     private InputStream inputStream;
-    private BufferedReader fileReader;
+    //private BufferedReader fileReader;
     public FileInputHelper(String filename) throws IOException {
         file = new File(filename);
         inputStream = new FileInputStream(file);
-        fileReader = new BufferedReader(new FileReader(file));
+        //fileReader = new BufferedReader(new FileReader(file));
     }
 
     public FileInputHelper() throws FileNotFoundException {
         file = new File("input.txt");
         inputStream = new FileInputStream(file);
-        fileReader = new BufferedReader(new FileReader(file));
+        //fileReader = new BufferedReader(new FileReader(file));
     }
 
     public void setFilename(String filename) throws IOException {
         close();
         file = new File(filename);
         inputStream = new FileInputStream(file);
-        fileReader = new BufferedReader(new FileReader(file));
+        //fileReader = new BufferedReader(new FileReader(file));
     }
 
     @Override
     public void close() throws IOException{
         inputStream.close();
-        fileReader.close();
+        //fileReader.close();
     }
 
     public String readText() throws IOException {
         StringBuilder text = new StringBuilder();
-        String s;
-        while((s = fileReader.readLine()) != null){
+        int cur;
+        char s;
+        while((cur = inputStream.read()) != -1){
+            s = (char) cur;
             text.append(s);
-            text.append('\n');
         }
         return text.toString();
     }
@@ -53,12 +54,12 @@ public class FileInputHelper implements Closeable{
         return CodingText.toString();
     }
 
-    public Map<String, Character> readDecodingTree() throws IOException {
-        Map<String, Character> decodingMap = new HashMap<String, Character>();
+    public Map<String, Integer> readDecodingTree() throws IOException {
+        Map<String, Integer> decodingMap = new HashMap<String, Integer>();
         int cur = inputStream.read();
 
         do {
-            Character letter = (char) cur;
+            int letter = cur;
             StringBuilder code = new StringBuilder();
             cur = inputStream.read();
             while (cur != '\n') {
@@ -83,6 +84,7 @@ public class FileInputHelper implements Closeable{
             cur = cur >> 1;
         }
         ans.reverse();
+        //System.out.println(ans);
         return ans;
     }
 
